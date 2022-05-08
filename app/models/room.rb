@@ -5,7 +5,10 @@ class Room < ApplicationRecord
   validate :number_check
   validate :name_check
 
+  before_validation :delete_white_space_of_name
+
   private
+
   def name_check
     name_pattern = /.*#\d{2}\z/
     unless name_pattern.match(self.name)
@@ -17,5 +20,9 @@ class Room < ApplicationRecord
     unless self.number % 5 == 0
       errors.add(:number, '人数は5の倍数を入力ください')
     end
+  end
+
+  def delete_white_space_of_name
+    self.name = self.name.strip.gsub(/\s/, "_")
   end
 end
